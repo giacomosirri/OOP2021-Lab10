@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -32,9 +31,9 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return this.songs.stream().
-        		map(i -> i.getSongName()).
-        		sorted();
+        return this.songs.stream()
+        		.map(i -> i.getSongName())
+        		.sorted();
     }
 
     @Override
@@ -44,35 +43,49 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> albumInYear(final int year) {
-       return null;// return this.albums.entrySet().stream().
-        //		filter(
+       return this.albums.entrySet().stream()
+    		   .filter(i -> i.getValue() == year)
+    		   .map(i -> i.getKey());
     }
 
     @Override
     public int countSongs(final String albumName) {
-        return (int) this.songs.stream().
-        		map(i -> i.getAlbumName()).
-        		filter(i -> albumName.equals(i.orElse(null))).count();
+        return (int) this.songs.stream()
+        		.map(i -> i.getAlbumName())
+        		.filter(i -> albumName.equals(i.orElse(null)))
+        		.count();
     }
 
     @Override
     public int countSongsInNoAlbum() {
-        return -1;
+    	return (int) this.songs.stream()
+    			.map(i -> i.getAlbumName())
+    			.filter(i -> i.isEmpty()).count();
     }
 
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
-        return null;
+    	return OptionalDouble.of(this.albumDuration(albumName).orElse(0) / this.countSongs(albumName));
+    }
+
+    private OptionalDouble albumDuration(final String albumName) {
+    	return OptionalDouble.of(songs.stream()
+        		.filter(i -> albumName.equals(i.getAlbumName().orElse(null)))
+        		.map(i -> i.getDuration())
+        		.reduce((x, y) -> x + y).orElse(null));
     }
 
     @Override
     public Optional<String> longestSong() {
-        return null;
+        return Optional.ofNullable(this.songs.stream()
+        		.max((x, y) -> Double.compare(x.getDuration(), y.getDuration()))
+        		.get().getSongName());
     }
 
     @Override
     public Optional<String> longestAlbum() {
-        return null;
+        return this.albums.keySet().stream()
+        		.max((x, y) -> Double.compare(this.albumDuration(x).orElse(0), this.albumDuration(y).orElse(0)));
     }
 
     private static final class Song {
