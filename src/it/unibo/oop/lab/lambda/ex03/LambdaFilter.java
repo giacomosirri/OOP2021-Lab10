@@ -42,7 +42,7 @@ public final class LambdaFilter extends JFrame {
         LOWERCASE("Convert to lowercase", i -> i.toLowerCase()),
         NUM_OF_CHARS("Number of characters", i -> String.valueOf(i.chars().count())),
         NUM_OF_LINES("Number of lines", i -> String.valueOf(i.lines().count())),
-        ALPHABETICAL_ORDER("List words in alphabetical order", i -> Pattern.compile(" ")
+        ALPHABETICAL_ORDER("List words in alphabetical order", i -> Pattern.compile("[^\\w]+")
                 .splitAsStream(i)
                 .sorted((x, y) -> x.compareTo(y))
                 .reduce((x, y) -> x + "\n" + y)
@@ -50,7 +50,7 @@ public final class LambdaFilter extends JFrame {
     	),
     	WORD_COUNT("Count the occurences", i -> {
     		Map<String, Integer> countWords = new HashMap<>();
-    		Pattern.compile(" ").splitAsStream(i)
+    		Pattern.compile("[^\\w]+").splitAsStream(i)
     			.forEach(j -> {
     				if (countWords.containsKey(j)) {
     					countWords.put(j, countWords.get(j) + 1);

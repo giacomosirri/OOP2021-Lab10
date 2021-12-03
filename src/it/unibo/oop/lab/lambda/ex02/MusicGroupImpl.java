@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
- import java.util.stream.Stream;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -32,7 +33,7 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public Stream<String> orderedSongNames() {
         return this.songs.stream()
-        		.map(i -> i.getSongName())
+        	    .map(i -> i.getSongName())
         		.sorted();
     }
 
@@ -60,7 +61,8 @@ public final class MusicGroupImpl implements MusicGroup {
     public int countSongsInNoAlbum() {
     	return (int) this.songs.stream()
     			.map(i -> i.getAlbumName())
-    			.filter(i -> i.isEmpty()).count();
+    			.filter(i -> i.isEmpty())
+    			.count();
     }
 
     @Override
@@ -71,13 +73,13 @@ public final class MusicGroupImpl implements MusicGroup {
     private OptionalDouble albumDuration(final String albumName) {
     	return OptionalDouble.of(songs.stream()
         		.filter(i -> albumName.equals(i.getAlbumName().orElse(null)))
-        		.map(i -> i.getDuration())
-        		.reduce((x, y) -> x + y).orElse(null));
+        		.flatMapToDouble(i -> DoubleStream.builder().add(i.getDuration()).build())
+        		.sum());
     }
 
     @Override
     public Optional<String> longestSong() {
-        return Optional.ofNullable(this.songs.stream()
+        return Optional.of(this.songs.stream()
         		.max((x, y) -> Double.compare(x.getDuration(), y.getDuration()))
         		.get().getSongName());
     }
