@@ -10,7 +10,8 @@ import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 /**
- *
+ * Class that implements a {@link it.unibo.oop.lab.lambda.ex02.MusicGroup.java}.
+ * 
  */
 public final class MusicGroupImpl implements MusicGroup {
 
@@ -52,8 +53,8 @@ public final class MusicGroupImpl implements MusicGroup {
     @Override
     public int countSongs(final String albumName) {
         return (int) this.songs.stream()
-        		.map(i -> i.getAlbumName())
-        		.filter(i -> albumName.equals(i.orElse(null)))
+        		.filter(i -> i.getAlbumName().isPresent())
+        		.filter(i -> albumName.equals(i.getAlbumName().get()))
         		.count();
     }
 

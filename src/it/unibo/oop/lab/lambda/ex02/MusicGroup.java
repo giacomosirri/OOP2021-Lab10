@@ -5,13 +5,12 @@ import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 /**
- * 
- *
+ * Interface for a MusicGroup, which consists of albums and songs 
+ * that may or may not be in any of the albums of the group.
  */
 public interface MusicGroup {
 
     /**
-     * 
      * @param albumName
      *            album name
      * @param year

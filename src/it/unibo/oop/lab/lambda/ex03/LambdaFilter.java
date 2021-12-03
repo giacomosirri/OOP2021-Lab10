@@ -19,30 +19,25 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 /**
- * Modify this small program adding new filters.
- * Realize this exercise using as much as possible the Stream library.
- * 
+ * Realizes some commands, to be selected through a {@link javax.swing.JComboBox}, that given a string:
  * 1) Convert to lower-case
- * 
  * 2) Count the number of chars
- * 
- * 3) Count the number of lines
- * 
+ * 3) Count the number of lines 
  * 4) List all the words in alphabetical order
- * 
  * 5) Write the count for each word, e.g. "word word pippo" should output "pippo -> 1 word -> 2"
  *
  */
 public final class LambdaFilter extends JFrame {
 
     private static final long serialVersionUID = 1760990730218643730L;
-
+    private static final String NON_WORD_CHAR = "[^\\w]+";
+    
     private enum Command {
         IDENTITY("No modifications", Function.identity()),
         LOWERCASE("Convert to lowercase", i -> i.toLowerCase()),
         NUM_OF_CHARS("Number of characters", i -> String.valueOf(i.chars().count())),
         NUM_OF_LINES("Number of lines", i -> String.valueOf(i.lines().count())),
-        ALPHABETICAL_ORDER("List words in alphabetical order", i -> Pattern.compile("[^\\w]+")
+        ALPHABETICAL_ORDER("List words in alphabetical order", i -> Pattern.compile(NON_WORD_CHAR)
                 .splitAsStream(i)
                 .sorted((x, y) -> x.compareTo(y))
                 .reduce((x, y) -> x + "\n" + y)
@@ -50,7 +45,7 @@ public final class LambdaFilter extends JFrame {
     	),
     	WORD_COUNT("Count the occurences", i -> {
     		Map<String, Integer> countWords = new HashMap<>();
-    		Pattern.compile("[^\\w]+").splitAsStream(i)
+    		Pattern.compile(NON_WORD_CHAR).splitAsStream(i)
     			.forEach(j -> {
     				if (countWords.containsKey(j)) {
     					countWords.put(j, countWords.get(j) + 1);
@@ -117,7 +112,8 @@ public final class LambdaFilter extends JFrame {
     }
 
     /**
-     * @param a unused
+     * @param a 
+     * 		unused
      */
     public static void main(final String... a) {
         final LambdaFilter gui = new LambdaFilter();

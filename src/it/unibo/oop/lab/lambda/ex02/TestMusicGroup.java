@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * The above comment shuts down checkstyle: in a test suite, magic numbers may be tolerated.
  */
 /**
- *
+ * Simple test class for {@link it.unibo.oop.lab.lambda.ex02.MusicGroupImpl} using JUnit
  */
 public final class TestMusicGroup {
 
